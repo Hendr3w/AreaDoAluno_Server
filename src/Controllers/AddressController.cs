@@ -1,12 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AreaDoAluno.Data;
+using AreaDoAluno.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
     public class AddressController : Controller
     {
-        public IActionResult Index()
+        private readonly DataContext _context;
+
+        public AddressController(DataContext context)
         {
-            return View();
+            _context = context;
         }
+
+
+
+        [HttpGet]
+        [Route("get_id")]
+        public async Task<ActionResult<Adress>> GetId(int id)
+        {
+            try{
+                var adress = await _context.Adress.FirstOrDefaultAsync(a => a.Id == id);
+
+                if (adress == null)
+                    return NotFound();
+                
+                return adress;
+            } catch{
+                return StatusCode(500);
+            }
+
+        }
+
+        
     }
 }

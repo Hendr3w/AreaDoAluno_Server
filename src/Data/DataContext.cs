@@ -18,7 +18,7 @@ namespace AreaDoAluno.Data
         public DbSet<Professor> Professor { get; set; }
         public DbSet<StudentExam> StudentExam { get; set; }
         public DbSet<StudentClass> StudentClass { get; set; }
-        public DbSet<Tuition> Tuitions { get; set; }
+        public DbSet<Tuition> Tuition { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

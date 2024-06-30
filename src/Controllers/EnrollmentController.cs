@@ -1,12 +1,155 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AreaDoAluno.Data;
+using AreaDoAluno.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    public class EnrollmentController : Controller
+    [Route("enrollment")]
+    [ApiController]
+    public class EnrollmentController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly DataContext _context;
+        GeneralController genCtrl = new();
+
+        public EnrollmentController(DataContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        public async Task<Enrollment> buildEnrollment(Enrollment enrollment)
+        {
+            enrollment.Student = await genCtrl.GetStudentId(enrollment.StudentId);
+            //Implementar montador de Student.
+            enrollment.Course = await genCtrl.GetCourseId(enrollment.CourseId);
+            return enrollment;
+        }
+
+        public async Task<Enrollment[]> buildEnrollments(Enrollment[] enrollments)
+        {
+            foreach (var enrollment in enrollments){
+                Enrollment enrollmentTemp = await buildEnrollment(enrollment);
+                enrollment.Student = await genCtrl.GetStudentId(enrollment.StudentId);
+                //Implementar montador de Student.
+                enrollment.Course = await genCtrl.GetCourseId(enrollment.CourseId);
+            }
+
+            return enrollments;
+        }
+
+
+
+        [HttpPost]
+        [Route("signup")]
+        public async Task<ActionResult<Enrollment>> AddEnrollment(Enrollment enrollment)
+        {
+            try
+            {
+                _context.Enrollment.Add(enrollment);
+                await _context.SaveChangesAsync();
+                return Created("", enrollment);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("all")]
+        public async Task<ActionResult<IEnumerable<Enrollment>>> GetAllEnrollment()
+        {
+            try
+            {
+                var enrollments = await _context.Enrollment.ToListAsync();
+                enrollments = (await buildEnrollments(enrollments.ToArray())).ToList();
+
+
+                return Ok(enrollments);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("{id}")]
+        [Route("get")]
+        public async Task<ActionResult<Enrollment>> GetEnrollmentById(int id)
+        {
+            try
+            {
+                var enrollment = await _context.Enrollment.FindAsync(id);
+
+                if (enrollment == null)
+                {
+                    return NotFound("Enrollment not found");
+                }
+
+                enrollment = await buildEnrollment(enrollment);
+
+                return Ok(enrollment);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id}")]
+        [Route("update")]
+        public async Task<IActionResult> UpdateEnrollment(int id, Enrollment updatedEnrollment)
+        {
+            try
+            {
+                if (id != updatedEnrollment.Id)
+                {
+                    return BadRequest("Invalid enrollment ID");
+                }
+
+                var existingEnrollment = await _context.Enrollment.FindAsync(id);
+
+                if (existingEnrollment == null)
+                {
+                    return NotFound("Enrollment not found");
+                }
+
+                existingEnrollment.StudentId = updatedEnrollment.StudentId; 
+                existingEnrollment.CourseId = updatedEnrollment.CourseId; 
+                existingEnrollment.EnrollmentDate = updatedEnrollment.EnrollmentDate; 
+
+                await _context.SaveChangesAsync();
+
+                return Ok(existingEnrollment);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [Route("delete")]
+        public async Task<IActionResult> DeleteEnrollment(int id)
+        {
+            try
+            {
+                var enrollment = await _context.Enrollment.FindAsync(id);
+
+                if (enrollment == null)
+                {
+                    return NotFound("Enrollment not found");
+                }
+
+                _context.Enrollment.Remove(enrollment);
+                await _context.SaveChangesAsync();
+
+                return Ok("Enrollment deleted");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }
