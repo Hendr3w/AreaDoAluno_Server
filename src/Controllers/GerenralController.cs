@@ -9,9 +9,11 @@ namespace AreaDoAluno.Controllers
     public class GeneralController : Controller
     {
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         private readonly DataContext _context;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-         public async Task<Adress?> GetAdressId(int id)
+        public async Task<Adress?> GetAdressId(int id)
         {
                 var adress = await _context.Adress.FirstOrDefaultAsync(a => a.Id == id);
                 if (adress == null)

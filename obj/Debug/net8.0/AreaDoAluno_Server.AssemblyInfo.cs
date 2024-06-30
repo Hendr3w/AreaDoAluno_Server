@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AreaDoAluno_Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b5c4c97751f2d653bbd4711de8fac2ff394eb6a2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fced42a5599361c1b15f9d661297eb1749836fc6")]
 [assembly: System.Reflection.AssemblyProductAttribute("AreaDoAluno_Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AreaDoAluno_Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
