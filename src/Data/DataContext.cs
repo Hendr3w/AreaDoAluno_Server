@@ -23,7 +23,7 @@ namespace AreaDoAluno.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connectionString = "Server=localhost;Port=3306;Database=AreaDoAluno;User=root;Password=hendrew;";
+            string connectionString = "Server=localhost;Port=3306;Database=AreaDoAluno;User=root;Password=root;";
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
 

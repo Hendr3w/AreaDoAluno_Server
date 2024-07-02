@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
+    [Route("[controller]")]
+    [ApiController]
     public class AddressController : Controller
     {
         private readonly DataContext _context;
@@ -17,7 +19,6 @@ namespace AreaDoAluno.Controllers
 
 
         [HttpGet]
-        [Route("get_id")]
         public async Task<ActionResult<Adress>> GetId(int id)
         {
             try{

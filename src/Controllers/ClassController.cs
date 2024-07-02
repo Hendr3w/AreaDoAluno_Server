@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
+    [Route("[controller]")]
+    [ApiController]
     public class ClassController : Controller
     {
         private readonly DataContext _context;
@@ -17,6 +19,7 @@ namespace AreaDoAluno.Controllers
         
         GeneralController genCtrl = new();
 
+        [HttpGet]
         public async Task<Class> BuildClass(Class _class)
         {
             _class.Professor = await genCtrl.GetProfessorId(_class.ProfessorId);
@@ -25,6 +28,7 @@ namespace AreaDoAluno.Controllers
             return _class;
         }
 
+        [HttpGet]
         public async Task<Class[]> BuildClasses(Class[] _classes)
         {
             foreach (var _class in _classes){
@@ -37,7 +41,6 @@ namespace AreaDoAluno.Controllers
 
 
         [HttpGet]
-        [Route("getAll")]
         public async Task<IActionResult> Getall()
         {
             try{
@@ -51,7 +54,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("get_id")]
         public async Task<ActionResult<Class>> GetId(int id)
         {
             try{
@@ -69,7 +71,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPost]
-        [Route("signup")] 
         public ActionResult<Class> AddClass(Class _class) 
         {
             _context.Add(_class);

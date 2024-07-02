@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("discipline")]
+    [Route("[controller]")]
     [ApiController]
     public class DisciplineController : Controller
     {
@@ -18,7 +18,6 @@ namespace AreaDoAluno.Controllers
 
 
         [HttpGet]
-        [Route("all")]
         public async Task<IActionResult> GetAll() 
         {
             try {
@@ -32,7 +31,6 @@ namespace AreaDoAluno.Controllers
 
 
         [HttpGet]
-        [Route("get_id")]
         public async Task<ActionResult<Discipline>> GetId(int id)
         {
             try{
@@ -49,7 +47,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPost]
-        [Route("signup")] 
         public ActionResult<Discipline> AddDiscipline(Discipline discipline) 
         {
             _context.Add(discipline);
@@ -58,7 +55,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPut]
-        [Route("update")]
         public async Task<ActionResult<Discipline>> UpdateDiscipline(Discipline newDiscipline) 
         {
             try {
@@ -84,7 +80,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Route("delete")]
         public async Task<IActionResult> Delete(int id) 
         {
             try {

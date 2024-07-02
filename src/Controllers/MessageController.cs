@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("message")]
+    [Route("[controller]")]
     [ApiController]
     public class MessageController : ControllerBase
     {
@@ -36,7 +36,6 @@ namespace AreaDoAluno.Controllers
 
 
         [HttpPost]
-        [Route("cadastrar")]
         public async Task<ActionResult<Message>> AddMessage(Message message)
         {
             try
@@ -52,7 +51,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
         public async Task<ActionResult<IEnumerable<Message>>> GetAllMessages()
         {
             try

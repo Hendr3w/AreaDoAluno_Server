@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("tuition")]
+    [Route("[controller]")]
     [ApiController]
     public class TuitionController : Controller
     {
@@ -33,7 +33,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPost]
-        [Route("cadastrar")] 
         public ActionResult<Tuition> AddTuition(Tuition tuition) 
         {
             _appDbContext.Add(tuition);
@@ -67,7 +66,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
         public async Task<IActionResult> GetAll() 
         {
             try {

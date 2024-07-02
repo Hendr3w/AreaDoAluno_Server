@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("materials")]
+    [Route("[controller]")]
     [ApiController]
     public class MaterialsController : ControllerBase
     {
@@ -35,7 +35,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPost]
-        [Route("cadastrar")]
         public async Task<ActionResult<Materials>> AddMaterial(Materials material)
         {
             try
@@ -51,7 +50,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
         public async Task<ActionResult<IEnumerable<Materials>>> GetAllMaterials()
         {
             try
@@ -68,7 +66,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet("{id}")]
-        [Route("get")]
         public async Task<ActionResult<Materials>> GetMaterialById(int id)
         {
             try
@@ -91,7 +88,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPut("{id}")]
-        [Route("update")]
         public async Task<IActionResult> UpdateMaterial(int id, Materials updatedMaterial)
         {
             try
@@ -123,7 +119,6 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Route("delete")]
         public async Task<IActionResult> DeleteMaterial(int id)
         {
             try
