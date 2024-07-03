@@ -18,11 +18,11 @@ namespace AreaDoAluno.Controllers
 
 
 
-        [HttpGet]
-        public async Task<ActionResult<Adress>> GetId(int id)
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Adress>> GetId(int Id)
         {
             try{
-                var adress = await _context.Adress.FirstOrDefaultAsync(a => a.Id == id);
+                var adress = await _context.Adress.FirstOrDefaultAsync(a => a.Id == Id);
 
                 if (adress == null)
                     return NotFound();

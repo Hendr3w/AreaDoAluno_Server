@@ -10,31 +10,9 @@ namespace AreaDoAluno.Controllers
     public class ProfessorController : Controller
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
-
         public ProfessorController(DataContext appDbContext) {
             _context = appDbContext;
         }
-
-
-        public async Task<Professor> BuildProfessor(Professor _Professor)
-        {
-            _Professor.Adress = await genCtrl.GetAdressId(_Professor.AdressId);
-            
-            return _Professor;
-        }
-
-        public async Task<Professor[]> BuildProfessor(Professor[] professors)
-        {
-            foreach (var professor in professors){
-                Professor ProfessorTemp = await BuildProfessor(professor);
-                professor.Adress = ProfessorTemp.Adress;
-            }   
-            return professors;
-        }
-
-
-
 
         [HttpPost]
         public ActionResult<Professor> AddProfessor(Professor professor) 
@@ -74,7 +52,6 @@ namespace AreaDoAluno.Controllers
         {
             try {
                 var professors = await _context.Professor.ToListAsync();
-                professors = (await BuildProfessor(professors.ToArray())).ToList();
 
                 return Ok(professors);
             } catch {
@@ -82,16 +59,15 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Professor>> Get(int id) 
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Professor>> Get(int Id) 
         {
             try {
-                var professor = await _context.Professor.FirstOrDefaultAsync(p => p.Id == id);
+                var professor = await _context.Professor.FirstOrDefaultAsync(p => p.Id == Id);
 
                 if (professor == null) {
                     return NotFound("Professor not found");
                 }
-                professor = await BuildProfessor(professor);
                 
                 return Ok(professor);
             } catch {
@@ -99,11 +75,11 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id) 
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete(int Id) 
         {
             try {
-                var professor = await _context.Professor.FindAsync(id);
+                var professor = await _context.Professor.FindAsync(Id);
                 
                 if (professor == null)
                 {

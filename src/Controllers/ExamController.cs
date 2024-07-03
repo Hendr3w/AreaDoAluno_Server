@@ -10,27 +10,9 @@ namespace AreaDoAluno.Controllers
     public class ExamController : ControllerBase
     {
         private readonly Data.DataContext _context;
-        GeneralController genCtrl = new();
-
         public ExamController(DataContext context)
         {
             _context = context;
-        }
-
-        public async Task<Exam> BuildExam(Exam _Exam)
-        {
-            _Exam.Class = await genCtrl.GetClassId(_Exam.ClassId);
-            
-            return _Exam;
-        }
-
-        public async Task<Exam[]> BuildCExams(Exam[] _Exames)
-        {
-            foreach (var _Exam in _Exames){
-                Exam ExamTemp = await BuildExam(_Exam);
-                _Exam.Class = ExamTemp.Class;
-            }
-            return _Exames;
         }
 
         [HttpPost]
@@ -62,12 +44,12 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Exam>> GetExamById(int id)
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Exam>> GetExamById(int Id)
         {
             try
             {
-                var exam = await _context.Exam.FindAsync(id);
+                var exam = await _context.Exam.FindAsync(Id);
 
                 if (exam == null)
                 {
@@ -82,17 +64,12 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateExam(int id, Exam updatedExam)
+        [HttpPut]
+        public async Task<IActionResult> UpdateExam(Exam updatedExam)
         {
             try
             {
-                if (id != updatedExam.Id)
-                {
-                    return BadRequest("Invalid exam ID");
-                }
-
-                var existingExam = await _context.Exam.FindAsync(id);
+                var existingExam = await _context.Exam.FindAsync(updatedExam.Id);
 
                 if (existingExam == null)
                 {
@@ -111,12 +88,12 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteExam(int id)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteExam(int Id)
         {
             try
             {
-                var exam = await _context.Exam.FindAsync(id);
+                var exam = await _context.Exam.FindAsync(Id);
 
                 if (exam == null)
                 {

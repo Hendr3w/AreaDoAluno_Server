@@ -10,30 +10,10 @@ namespace AreaDoAluno.Controllers
     public class MessageController : ControllerBase
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
-
         public MessageController(DataContext appDbContext)
         {
             _context = appDbContext;
         }
-
-         public async Task<Message> BuildMessage(Message _Message)
-        {
-            _Message.Class = await genCtrl.GetClassId(_Message.ClassId);
-    
-            
-            return _Message;
-        }
-
-        public async Task<Message[]> BuildMessage(Message[] _Messages)
-        {
-            foreach (var _Message in _Messages){
-                Message MessageTemp = await BuildMessage(_Message);
-                _Message.Class = MessageTemp.Class;
-            }
-            return _Messages;
-        }
-
 
         [HttpPost]
         public async Task<ActionResult<Message>> AddMessage(Message message)
@@ -64,12 +44,12 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Message>> GetMessageById(int id)
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Message>> GetMessageById(int Id)
         {
             try
             {
-                var message = await _context.Message.FindAsync(id);
+                var message = await _context.Message.FindAsync(Id);
 
                 if (message == null)
                 {
@@ -84,17 +64,17 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMessage(int id, Message updatedMessage)
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> UpdateMessage(int Id, Message updatedMessage)
         {
             try
             {
-                if (id != updatedMessage.Id)
+                if (Id != updatedMessage.Id)
                 {
                     return BadRequest("Invalid message ID");
                 }
 
-                var existingMessage = await _context.Message.FindAsync(id);
+                var existingMessage = await _context.Message.FindAsync(Id);
 
                 if (existingMessage == null)
                 {
@@ -112,12 +92,12 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMessage(int id)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteMessage(int Id)
         {
             try
             {
-                var message = await _context.Message.FindAsync(id);
+                var message = await _context.Message.FindAsync(Id);
 
                 if (message == null)
                 {

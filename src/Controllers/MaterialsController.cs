@@ -10,28 +10,9 @@ namespace AreaDoAluno.Controllers
     public class MaterialsController : ControllerBase
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
-
         public MaterialsController(DataContext appDbContext)
         {
             _context = appDbContext;
-        }
-
-        public async Task<Materials> BuildMaterials(Materials material)
-        {
-            material.Class = await genCtrl.GetClassId(material.ClassId);
-            
-            return material;
-        }
-
-        public async Task<Materials[]> BuildMaterials(Materials[] materials)
-        {
-            foreach (var material in materials){
-                Materials MaterialsTemp = await BuildMaterials(material);
-                material.Class = MaterialsTemp.Class;
-                
-            }
-            return materials;
         }
 
         [HttpPost]
@@ -55,7 +36,6 @@ namespace AreaDoAluno.Controllers
             try
             {
                 var materials = await _context.Materials.ToListAsync();
-                materials = (await BuildMaterials(materials.ToArray())).ToList();
 
                 return Ok(materials);
             }
@@ -65,19 +45,17 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Materials>> GetMaterialById(int id)
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Materials>> GetMaterialById(int Id)
         {
             try
             {
-                var material = await _context.Materials.FindAsync(id);
+                var material = await _context.Materials.FindAsync(Id);
 
                 if (material == null)
                 {
                     return NotFound("Material not found");
                 }
-
-                material = await BuildMaterials(material);
 
                 return Ok(material);
             }
@@ -118,12 +96,12 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMaterial(int id)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteMaterial(int Id)
         {
             try
             {
-                var material = await _context.Materials.FindAsync(id);
+                var material = await _context.Materials.FindAsync(Id);
 
                 if (material == null)
                 {

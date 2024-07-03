@@ -30,11 +30,11 @@ namespace AreaDoAluno.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<ActionResult<Discipline>> GetId(int id)
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Discipline>> GetId(int Id)
         {
             try{
-                var discipline = await _context.Discipline.FirstOrDefaultAsync(a => a.Id == id);
+                var discipline = await _context.Discipline.FirstOrDefaultAsync(a => a.Id == Id);
 
                 if (discipline == null)
                     return NotFound();
@@ -79,11 +79,11 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id) 
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete(int Id) 
         {
             try {
-                var Discipline = await _context.Discipline.FindAsync(id);
+                var Discipline = await _context.Discipline.FindAsync(Id);
                 
                 if (Discipline == null)
                 {

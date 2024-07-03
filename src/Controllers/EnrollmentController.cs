@@ -10,34 +10,10 @@ namespace AreaDoAluno.Controllers
     public class EnrollmentController : ControllerBase
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
-
         public EnrollmentController(DataContext context)
         {
             _context = context;
         }
-
-        public async Task<Enrollment> buildEnrollment(Enrollment enrollment)
-        {
-            enrollment.Student = await genCtrl.GetStudentId(enrollment.StudentId);
-            //Implementar montador de Student.
-            enrollment.Course = await genCtrl.GetCourseId(enrollment.CourseId);
-            return enrollment;
-        }
-
-        public async Task<Enrollment[]> buildEnrollments(Enrollment[] enrollments)
-        {
-            foreach (var enrollment in enrollments){
-                Enrollment enrollmentTemp = await buildEnrollment(enrollment);
-                enrollment.Student = await genCtrl.GetStudentId(enrollment.StudentId);
-                //Implementar montador de Student.
-                enrollment.Course = await genCtrl.GetCourseId(enrollment.CourseId);
-            }
-
-            return enrollments;
-        }
-
-
 
         [HttpPost]
         public async Task<ActionResult<Enrollment>> AddEnrollment(Enrollment enrollment)
@@ -60,7 +36,6 @@ namespace AreaDoAluno.Controllers
             try
             {
                 var enrollments = await _context.Enrollment.ToListAsync();
-                enrollments = (await buildEnrollments(enrollments.ToArray())).ToList();
 
 
                 return Ok(enrollments);
@@ -71,19 +46,17 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Enrollment>> GetEnrollmentById(int id)
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Enrollment>> GetEnrollmentById(int Id)
         {
             try
             {
-                var enrollment = await _context.Enrollment.FindAsync(id);
+                var enrollment = await _context.Enrollment.FindAsync(Id);
 
                 if (enrollment == null)
                 {
                     return NotFound("Enrollment not found");
                 }
-
-                enrollment = await buildEnrollment(enrollment);
 
                 return Ok(enrollment);
             }
@@ -93,26 +66,21 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEnrollment(int id, Enrollment updatedEnrollment)
+        [HttpPut]
+        public async Task<IActionResult> UpdateEnrollment(Enrollment enrollment)
         {
             try
             {
-                if (id != updatedEnrollment.Id)
-                {
-                    return BadRequest("Invalid enrollment ID");
-                }
-
-                var existingEnrollment = await _context.Enrollment.FindAsync(id);
+                var existingEnrollment = await _context.Enrollment.FindAsync(enrollment.Id);
 
                 if (existingEnrollment == null)
                 {
                     return NotFound("Enrollment not found");
                 }
 
-                existingEnrollment.StudentId = updatedEnrollment.StudentId; 
-                existingEnrollment.CourseId = updatedEnrollment.CourseId; 
-                existingEnrollment.EnrollmentDate = updatedEnrollment.EnrollmentDate; 
+                existingEnrollment.StudentId = enrollment.StudentId; 
+                existingEnrollment.CourseId = enrollment.CourseId; 
+                existingEnrollment.EnrollmentDate = enrollment.EnrollmentDate; 
 
                 await _context.SaveChangesAsync();
 
@@ -124,12 +92,12 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEnrollment(int id)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteEnrollment(int Id)
         {
             try
             {
-                var enrollment = await _context.Enrollment.FindAsync(id);
+                var enrollment = await _context.Enrollment.FindAsync(Id);
 
                 if (enrollment == null)
                 {

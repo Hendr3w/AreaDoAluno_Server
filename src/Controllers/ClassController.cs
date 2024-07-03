@@ -16,36 +16,11 @@ namespace AreaDoAluno.Controllers
             _context = context;
         }
 
-        
-        GeneralController genCtrl = new();
-
-        [HttpGet]
-        public async Task<Class> BuildClass(Class _class)
-        {
-            _class.Professor = await genCtrl.GetProfessorId(_class.ProfessorId);
-            _class.Discipline = await genCtrl.GetDisciplineId(_class.DisciplineId);
-            
-            return _class;
-        }
-
-        [HttpGet]
-        public async Task<Class[]> BuildClasses(Class[] _classes)
-        {
-            foreach (var _class in _classes){
-                Class classTemp = await BuildClass(_class);
-                _class.Professor = classTemp.Professor;
-                _class.Discipline = classTemp.Discipline;
-            }
-            return _classes;
-        }
-
-
         [HttpGet]
         public async Task<IActionResult> Getall()
         {
             try{
                 var classes = await _context.Class.ToListAsync();
-                classes = (await BuildClasses(classes.ToArray())).ToList();
 
                 return Ok(classes);
             } catch {
@@ -53,16 +28,14 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<ActionResult<Class>> GetId(int id)
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Class>> GetId(int Id)
         {
             try{
-                var _class = await _context.Class.FirstOrDefaultAsync((_class) => _class.Id == id);
+                var _class = await _context.Class.FirstOrDefaultAsync((_class) => _class.Id == Id);
 
                 if(_class is null)
                     return NotFound();
-
-                _class = await BuildClass(_class);
 
                 return Ok(_class);
             }catch{
@@ -103,11 +76,11 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id) 
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete(int Id) 
         {
             try {
-                var _class = await _context.Class.FindAsync(id);
+                var _class = await _context.Class.FindAsync(Id);
                 
                 if (_class == null)
                 {

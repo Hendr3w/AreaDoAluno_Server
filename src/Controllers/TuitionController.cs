@@ -10,26 +10,8 @@ namespace AreaDoAluno.Controllers
     public class TuitionController : Controller
     {
         private readonly DataContext _appDbContext;
-        GeneralController genCtrl = new();
-
         public TuitionController(DataContext appDbContext) {
             _appDbContext = appDbContext;
-        }
-
-         public async Task<Tuition> BuildTuition(Tuition _Tuition)
-        {
-            _Tuition.Enrollment = await genCtrl.GetEnrollmentId(_Tuition.EnrollmentId);
-            
-            return _Tuition;
-        }
-
-        public async Task<Tuition[]> BuildTuition(Tuition[] _Tuitiones)
-        {
-            foreach (var _Tuition in _Tuitiones){
-                Tuition TuitionTemp = await BuildTuition(_Tuition);
-                 _Tuition.Enrollment = await genCtrl.GetEnrollmentId(_Tuition.EnrollmentId);
-            }
-            return _Tuitiones;
         }
 
         [HttpPost]
@@ -70,8 +52,6 @@ namespace AreaDoAluno.Controllers
         {
             try {
                 var tuitions = await _appDbContext.Tuition.ToListAsync();
-                tuitions = (await BuildTuition(tuitions.ToArray())).ToList();
-
 
                 return Ok(tuitions);
             } catch {
@@ -79,17 +59,15 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id) 
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> Get(int Id) 
         {
             try {
-                var tuition = await _appDbContext.Tuition.FirstOrDefaultAsync(t => t.Id == id);
+                var tuition = await _appDbContext.Tuition.FirstOrDefaultAsync(t => t.Id == Id);
 
                 if (tuition == null) {
                     return NotFound("Tuition not found");
                 }
-                
-                tuition = await BuildTuition(tuition);
 
                 return Ok(tuition);
             } catch {
@@ -97,11 +75,11 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id) 
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete(int Id) 
         {
             try {
-                var tuition = await _appDbContext.Tuition.FindAsync(id);
+                var tuition = await _appDbContext.Tuition.FindAsync(Id);
                 
                 if (tuition == null)
                 {

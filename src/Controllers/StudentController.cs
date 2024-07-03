@@ -10,31 +10,9 @@ namespace AreaDoAluno.Controllers
     public class StudentController : Controller
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
-
         public StudentController(DataContext appDbContext) {
             _context = appDbContext;
         }
-
-
-        public async Task<Student> BuildStudent(Student _Student)
-        {
-            _Student.Adress = await genCtrl.GetAdressId(_Student.AdressId);
-            
-            return _Student;
-        }
-
-        public async Task<Student[]> BuildStudent(Student[] Students)
-        {
-            foreach (var Student in Students){
-                Student StudentTemp = await BuildStudent(Student);
-                Student.Adress = StudentTemp.Adress;
-            }   
-            return Students;
-        }
-
-
-
 
         [HttpPost]
         public ActionResult<Student> AddStudent(Student Student) 
@@ -74,24 +52,24 @@ namespace AreaDoAluno.Controllers
         {
             try {
                 var Students = await _context.Student.ToListAsync();
-                Students = (await BuildStudent(Students.ToArray())).ToList();
+                Console.WriteLine("Students: ", Students);
 
                 return Ok(Students);
-            } catch {
+            } catch (Exception e){
+                Console.WriteLine(e.Message);
                 return StatusCode(400);
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> Get(int id) 
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<Student>> Get(int Id) 
         {
             try {
-                var Student = await _context.Student.FirstOrDefaultAsync(p => p.Id == id);
+                var Student = await _context.Student.FirstOrDefaultAsync(p => p.Id == Id);
 
                 if (Student == null) {
                     return NotFound("Student not found");
                 }
-                Student = await BuildStudent(Student);
                 
                 return Ok(Student);
             } catch {
@@ -99,11 +77,11 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id) 
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete(int Id) 
         {
             try {
-                var Student = await _context.Student.FindAsync(id);
+                var Student = await _context.Student.FindAsync(Id);
                 
                 if (Student == null)
                 {

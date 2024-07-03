@@ -62,7 +62,7 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{Id}")]
         public async Task<IActionResult> GetId(int Id) 
         {
             try {
@@ -78,7 +78,7 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id) 
         {
             try {
