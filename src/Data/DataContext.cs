@@ -20,6 +20,7 @@ namespace AreaDoAluno.Data
         public DbSet<Exam> Exam { get; set; }
         public DbSet<Materials> Materials { get; set; }
         public DbSet<Message> Message { get; set; }
+        public DbSet<Person> Person { get; set; }
         public DbSet<Student> Student { get; set; }
         public DbSet<Professor> Professor { get; set; }
         public DbSet<StudentExam> StudentExam { get; set; }
