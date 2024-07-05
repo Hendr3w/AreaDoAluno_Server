@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AreaDoAluno_Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240629204641_v1")]
-    partial class v1
+    [Migration("20240705163442_NewMigration")]
+    partial class NewMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace AreaDoAluno_Server.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("AreaDoAluno.Models.Adress", b =>
+            modelBuilder.Entity("AreaDoAluno.Models.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace AreaDoAluno_Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Adress");
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("AreaDoAluno.Models.Class", b =>
@@ -232,7 +232,7 @@ namespace AreaDoAluno_Server.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AdressId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<DateOnly>("Birthdate")
@@ -243,6 +243,10 @@ namespace AreaDoAluno_Server.Migrations
 
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("varchar(1)");
 
                     b.Property<float>("HourlyRate")
                         .HasColumnType("float");
@@ -265,13 +269,9 @@ namespace AreaDoAluno_Server.Migrations
                     b.Property<string>("Rgm")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Sex")
-                        .IsRequired()
-                        .HasColumnType("varchar(1)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AdressId");
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Professors", (string)null);
                 });
@@ -284,7 +284,7 @@ namespace AreaDoAluno_Server.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AdressId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<DateOnly>("Birthdate")
@@ -295,6 +295,10 @@ namespace AreaDoAluno_Server.Migrations
 
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("varchar(1)");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
@@ -311,13 +315,9 @@ namespace AreaDoAluno_Server.Migrations
                     b.Property<string>("Rgm")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Sex")
-                        .IsRequired()
-                        .HasColumnType("varchar(1)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AdressId");
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Students", (string)null);
                 });
@@ -401,7 +401,7 @@ namespace AreaDoAluno_Server.Migrations
 
                     b.HasIndex("EnrollmentId");
 
-                    b.ToTable("Tuitions");
+                    b.ToTable("Tuition");
                 });
 
             modelBuilder.Entity("AreaDoAluno.Models.Class", b =>
@@ -477,24 +477,24 @@ namespace AreaDoAluno_Server.Migrations
 
             modelBuilder.Entity("AreaDoAluno.Models.Professor", b =>
                 {
-                    b.HasOne("AreaDoAluno.Models.Adress", "Adress")
+                    b.HasOne("AreaDoAluno.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AdressId")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Adress");
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("AreaDoAluno.Models.Student", b =>
                 {
-                    b.HasOne("AreaDoAluno.Models.Adress", "Adress")
+                    b.HasOne("AreaDoAluno.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AdressId")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Adress");
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("AreaDoAluno.Models.StudentClass", b =>

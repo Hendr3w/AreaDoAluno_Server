@@ -10,9 +10,9 @@ namespace AreaDoAluno.Models
     public string? Email { get; set; }
     public string? Password { get; set; }
     public string? Rgm { get; set; }
-    public char Sex { get; set; }
-    public Adress? Adress { get; set; }
-    public int AdressId { get; set; }
+    public char Gender { get; set; }
+    public Address? Address { get; set; }
+    public int AddressId { get; set; }
     public DateOnly Birthdate { get; set; }
     public Person(){}
     }  

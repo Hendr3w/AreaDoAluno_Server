@@ -13,9 +13,9 @@ namespace AreaDoAluno.Controllers
         private readonly DataContext _context;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-        public async Task<Adress?> GetAdressId(int id)
+        public async Task<Address?> GetAdressId(int id)
         {
-                var adress = await _context.Adress.FirstOrDefaultAsync(a => a.Id == id);
+                var adress = await _context.Address.FirstOrDefaultAsync(a => a.Id == id);
                 if (adress == null)
                     return null;
 

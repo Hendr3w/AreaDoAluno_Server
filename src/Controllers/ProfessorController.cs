@@ -19,7 +19,7 @@ namespace AreaDoAluno.Controllers
 
         public async Task<Professor> BuildProfessor(Professor _Professor)
         {
-            _Professor.Adress = await genCtrl.GetAdressId(_Professor.AdressId);
+            _Professor.Address = await genCtrl.GetAdressId(_Professor.AddressId);
             
             return _Professor;
         }
@@ -28,7 +28,7 @@ namespace AreaDoAluno.Controllers
         {
             foreach (var professor in professors){
                 Professor ProfessorTemp = await BuildProfessor(professor);
-                professor.Adress = ProfessorTemp.Adress;
+                professor.Address = ProfessorTemp.Address;
             }   
             return professors;
         }

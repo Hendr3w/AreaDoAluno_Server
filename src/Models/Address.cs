@@ -1,6 +1,6 @@
 namespace AreaDoAluno.Models
 {
-    public class Adress
+    public class Address
     {
         public int Id { get; set; }
         public string? Country { get; set; }
@@ -10,7 +10,7 @@ namespace AreaDoAluno.Models
         public string? Number { get; set; }
         public string? Cep { get; set; }
 
-        public Adress() {}
+        public Address() {}
 
     }
 }
