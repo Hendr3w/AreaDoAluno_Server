@@ -16,25 +16,6 @@ namespace AreaDoAluno.Controllers
             _context = context;
         }
 
-
-
-        //[HttpGet]
-        //[Route("{id}")]
-        //public async Task<ActionResult<Adress>> GetId(int id)
-        //{
-        //    try{
-        //        var adress = await _context.Adress.FirstOrDefaultAsync(a => a.Id == id);
-
-        //        if (adress == null)
-        //            return NotFound();
-
-        //        return adress;
-        //    } catch{
-        //        return StatusCode(500);
-        //    }
-        //}
-
-
         [HttpPost]
         [Route("")]
         public async Task<ActionResult<Address>> Create(Address address)

@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
+    [Route("[controller]")]
+    [ApiController]
     public class ClassController : Controller
     {
         private readonly DataContext _context;
@@ -14,35 +16,12 @@ namespace AreaDoAluno.Controllers
             _context = context;
         }
 
-        
-        GeneralController genCtrl = new();
-
-        public async Task<Class> BuildClass(Class _class)
-        {
-            _class.Professor = await genCtrl.GetProfessorId(_class.ProfessorId);
-            _class.Discipline = await genCtrl.GetDisciplineId(_class.DisciplineId);
-            
-            return _class;
-        }
-
-        public async Task<Class[]> BuildClasses(Class[] _classes)
-        {
-            foreach (var _class in _classes){
-                Class classTemp = await BuildClass(_class);
-                _class.Professor = classTemp.Professor;
-                _class.Discipline = classTemp.Discipline;
-            }
-            return _classes;
-        }
-
-
         [HttpGet]
-        [Route("getAll")]
-        public async Task<IActionResult> Getall()
+        [Route("")]
+        public async Task<IActionResult> List()
         {
             try{
                 var classes = await _context.Class.ToListAsync();
-                classes = (await BuildClasses(classes.ToArray())).ToList();
 
                 return Ok(classes);
             } catch {
@@ -51,16 +30,14 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("get_id")]
-        public async Task<ActionResult<Class>> GetId(int id)
+        [Route("{id}")]
+        public async Task<ActionResult<Class>> Find(int id)
         {
             try{
                 var _class = await _context.Class.FirstOrDefaultAsync((_class) => _class.Id == id);
 
                 if(_class is null)
                     return NotFound();
-
-                _class = await BuildClass(_class);
 
                 return Ok(_class);
             }catch{
@@ -69,8 +46,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPost]
-        [Route("signup")] 
-        public ActionResult<Class> AddClass(Class _class) 
+        [Route("")] 
+        public ActionResult<Class> Create(Class _class) 
         {
             _context.Add(_class);
             _context.SaveChanges();
@@ -78,7 +55,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Class>> UpdateClass(Class newClass) 
+        [Route("")]
+        public async Task<ActionResult<Class>> Update(Class newClass) 
         {
             try {
                 var _class = await _context.Class.FindAsync(newClass.Id);
@@ -102,7 +80,8 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("")]
         public async Task<IActionResult> Delete(int id) 
         {
             try {
@@ -116,7 +95,7 @@ namespace AreaDoAluno.Controllers
                 _context.Class.Remove(_class);
                 await _context.SaveChangesAsync();
 
-                return Ok("Class deleted");
+                return StatusCode(204);
             } catch {
                 return StatusCode(500);
             }

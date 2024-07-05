@@ -61,7 +61,5 @@ namespace AreaDoAluno.Controllers
                 return StatusCode(500);
             }
         }
-
-        
     }
 }

@@ -5,43 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("enrollment")]
+    [Route("[controller]")]
     [ApiController]
     public class EnrollmentController : ControllerBase
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
 
         public EnrollmentController(DataContext context)
         {
             _context = context;
         }
 
-        public async Task<Enrollment> buildEnrollment(Enrollment enrollment)
-        {
-            enrollment.Student = await genCtrl.GetStudentId(enrollment.StudentId);
-            //Implementar montador de Student.
-            enrollment.Course = await genCtrl.GetCourseId(enrollment.CourseId);
-            return enrollment;
-        }
-
-        public async Task<Enrollment[]> buildEnrollments(Enrollment[] enrollments)
-        {
-            foreach (var enrollment in enrollments){
-                Enrollment enrollmentTemp = await buildEnrollment(enrollment);
-                enrollment.Student = await genCtrl.GetStudentId(enrollment.StudentId);
-                //Implementar montador de Student.
-                enrollment.Course = await genCtrl.GetCourseId(enrollment.CourseId);
-            }
-
-            return enrollments;
-        }
-
-
-
         [HttpPost]
-        [Route("signup")]
-        public async Task<ActionResult<Enrollment>> AddEnrollment(Enrollment enrollment)
+        [Route("")]
+        public async Task<ActionResult<Enrollment>> Create(Enrollment enrollment)
         {
             try
             {
@@ -56,14 +33,12 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        public async Task<ActionResult<IEnumerable<Enrollment>>> GetAllEnrollment()
+        [Route("")]
+        public async Task<ActionResult<IEnumerable<Enrollment>>> List()
         {
             try
             {
                 var enrollments = await _context.Enrollment.ToListAsync();
-                enrollments = (await buildEnrollments(enrollments.ToArray())).ToList();
-
 
                 return Ok(enrollments);
             }
@@ -73,9 +48,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        [Route("get")]
-        public async Task<ActionResult<Enrollment>> GetEnrollmentById(int id)
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<Enrollment>> Find(int id)
         {
             try
             {
@@ -86,8 +61,6 @@ namespace AreaDoAluno.Controllers
                     return NotFound("Enrollment not found");
                 }
 
-                enrollment = await buildEnrollment(enrollment);
-
                 return Ok(enrollment);
             }
             catch (Exception ex)
@@ -96,9 +69,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        [Route("update")]
-        public async Task<IActionResult> UpdateEnrollment(int id, Enrollment updatedEnrollment)
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update(int id, Enrollment updatedEnrollment)
         {
             try
             {
@@ -128,9 +101,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        [Route("delete")]
-        public async Task<IActionResult> DeleteEnrollment(int id)
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
@@ -144,7 +117,7 @@ namespace AreaDoAluno.Controllers
                 _context.Enrollment.Remove(enrollment);
                 await _context.SaveChangesAsync();
 
-                return Ok("Enrollment deleted");
+                return StatusCode(204);
             }
             catch (Exception ex)
             {

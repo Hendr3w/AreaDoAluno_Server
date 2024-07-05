@@ -5,36 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("tuition")]
+    [Route("[controller]")]
     [ApiController]
     public class TuitionController : Controller
     {
         private readonly DataContext _appDbContext;
-        GeneralController genCtrl = new();
 
         public TuitionController(DataContext appDbContext) {
             _appDbContext = appDbContext;
         }
 
-         public async Task<Tuition> BuildTuition(Tuition _Tuition)
-        {
-            _Tuition.Enrollment = await genCtrl.GetEnrollmentId(_Tuition.EnrollmentId);
-            
-            return _Tuition;
-        }
-
-        public async Task<Tuition[]> BuildTuition(Tuition[] _Tuitiones)
-        {
-            foreach (var _Tuition in _Tuitiones){
-                Tuition TuitionTemp = await BuildTuition(_Tuition);
-                 _Tuition.Enrollment = await genCtrl.GetEnrollmentId(_Tuition.EnrollmentId);
-            }
-            return _Tuitiones;
-        }
-
         [HttpPost]
-        [Route("cadastrar")] 
-        public ActionResult<Tuition> AddTuition(Tuition tuition) 
+        [Route("")] 
+        public ActionResult<Tuition> Create(Tuition tuition) 
         {
             _appDbContext.Add(tuition);
             _appDbContext.SaveChanges();
@@ -42,7 +25,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Tuition>> UpdateTuition(Tuition newTuition) 
+        [Route("")]
+        public async Task<ActionResult<Tuition>> Update(Tuition newTuition) 
         {
             try {
                 var tuition = await _appDbContext.Tuition.FindAsync(newTuition.Id);
@@ -67,13 +51,11 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        public async Task<IActionResult> GetAll() 
+        [Route("")]
+        public async Task<IActionResult> List() 
         {
             try {
                 var tuitions = await _appDbContext.Tuition.ToListAsync();
-                tuitions = (await BuildTuition(tuitions.ToArray())).ToList();
-
 
                 return Ok(tuitions);
             } catch {
@@ -81,8 +63,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id) 
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> Find(int id) 
         {
             try {
                 var tuition = await _appDbContext.Tuition.FirstOrDefaultAsync(t => t.Id == id);
@@ -90,8 +73,6 @@ namespace AreaDoAluno.Controllers
                 if (tuition == null) {
                     return NotFound("Tuition not found");
                 }
-                
-                tuition = await BuildTuition(tuition);
 
                 return Ok(tuition);
             } catch {
@@ -99,7 +80,8 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> Delete(int id) 
         {
             try {
@@ -113,7 +95,7 @@ namespace AreaDoAluno.Controllers
                 _appDbContext.Tuition.Remove(tuition);
                 await _appDbContext.SaveChangesAsync();
 
-                return Ok("Tuition deleted");
+                return StatusCode(204);
             } catch {
                 return StatusCode(500);
             }
