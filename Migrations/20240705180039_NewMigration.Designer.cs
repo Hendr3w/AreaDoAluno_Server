@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AreaDoAluno_Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240705163442_NewMigration")]
+    [Migration("20240705180039_NewMigration")]
     partial class NewMigration
     {
         /// <inheritdoc />
@@ -224,59 +224,7 @@ namespace AreaDoAluno_Server.Migrations
                     b.ToTable("Message");
                 });
 
-            modelBuilder.Entity("AreaDoAluno.Models.Professor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("Birthdate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Cpf")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("varchar(1)");
-
-                    b.Property<float>("HourlyRate")
-                        .HasColumnType("float");
-
-                    b.Property<float>("HoursWorked")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Rg")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Rgm")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("Professors", (string)null);
-                });
-
-            modelBuilder.Entity("AreaDoAluno.Models.Student", b =>
+            modelBuilder.Entity("AreaDoAluno.Models.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -319,7 +267,9 @@ namespace AreaDoAluno_Server.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Person");
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("AreaDoAluno.Models.StudentClass", b =>
@@ -404,6 +354,26 @@ namespace AreaDoAluno_Server.Migrations
                     b.ToTable("Tuition");
                 });
 
+            modelBuilder.Entity("AreaDoAluno.Models.Professor", b =>
+                {
+                    b.HasBaseType("AreaDoAluno.Models.Person");
+
+                    b.Property<float>("HourlyRate")
+                        .HasColumnType("float");
+
+                    b.Property<float>("HoursWorked")
+                        .HasColumnType("float");
+
+                    b.ToTable("Professors", (string)null);
+                });
+
+            modelBuilder.Entity("AreaDoAluno.Models.Student", b =>
+                {
+                    b.HasBaseType("AreaDoAluno.Models.Person");
+
+                    b.ToTable("Students", (string)null);
+                });
+
             modelBuilder.Entity("AreaDoAluno.Models.Class", b =>
                 {
                     b.HasOne("AreaDoAluno.Models.Discipline", "Discipline")
@@ -475,18 +445,7 @@ namespace AreaDoAluno_Server.Migrations
                     b.Navigation("Class");
                 });
 
-            modelBuilder.Entity("AreaDoAluno.Models.Professor", b =>
-                {
-                    b.HasOne("AreaDoAluno.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("AreaDoAluno.Models.Student", b =>
+            modelBuilder.Entity("AreaDoAluno.Models.Person", b =>
                 {
                     b.HasOne("AreaDoAluno.Models.Address", "Address")
                         .WithMany()
@@ -544,6 +503,24 @@ namespace AreaDoAluno_Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Enrollment");
+                });
+
+            modelBuilder.Entity("AreaDoAluno.Models.Professor", b =>
+                {
+                    b.HasOne("AreaDoAluno.Models.Person", null)
+                        .WithOne()
+                        .HasForeignKey("AreaDoAluno.Models.Professor", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AreaDoAluno.Models.Student", b =>
+                {
+                    b.HasOne("AreaDoAluno.Models.Person", null)
+                        .WithOne()
+                        .HasForeignKey("AreaDoAluno.Models.Student", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
