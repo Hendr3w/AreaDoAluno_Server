@@ -5,37 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("exam")]
+    [Route("[controller]")]
     [ApiController]
     public class ExamController : ControllerBase
     {
         private readonly Data.DataContext _context;
-        GeneralController genCtrl = new();
 
         public ExamController(DataContext context)
         {
             _context = context;
         }
 
-        public async Task<Exam> BuildExam(Exam _Exam)
-        {
-            _Exam.Class = await genCtrl.GetClassId(_Exam.ClassId);
-            
-            return _Exam;
-        }
-
-        public async Task<Exam[]> BuildCExams(Exam[] _Exames)
-        {
-            foreach (var _Exam in _Exames){
-                Exam ExamTemp = await BuildExam(_Exam);
-                _Exam.Class = ExamTemp.Class;
-            }
-            return _Exames;
-        }
-
         [HttpPost]
-        [Route("cadastrar")]
-        public async Task<ActionResult<Exam>> AddExam(Exam exam)
+        [Route("")]
+        public async Task<ActionResult<Exam>> Create(Exam exam)
         {
             try
             {
@@ -50,8 +33,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        public async Task<ActionResult<IEnumerable<Exam>>> GetAll()
+        [Route("")]
+        public async Task<ActionResult<IEnumerable<Exam>>> List()
         {
             try
             {
@@ -64,9 +47,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        [Route("get")]
-        public async Task<ActionResult<Exam>> GetExamById(int id)
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<Exam>> Find(int id)
         {
             try
             {
@@ -85,9 +68,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        [Route("update")]
-        public async Task<IActionResult> UpdateExam(int id, Exam updatedExam)
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update(int id, Exam updatedExam)
         {
             try
             {
@@ -115,9 +98,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        [Route("delete")]
-        public async Task<IActionResult> DeleteExam(int id)
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
@@ -131,7 +114,7 @@ namespace AreaDoAluno.Controllers
                 _context.Remove(exam);
                 await _context.SaveChangesAsync();
 
-                return Ok("Exam deleted");
+                return StatusCode(204);
             }
             catch (Exception ex)
             {

@@ -27,10 +27,9 @@ namespace AreaDoAluno.Data
         public DbSet<StudentClass> StudentClass { get; set; }
         public DbSet<Tuition> Tuition { get; set; }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            string? connectionString = Configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
 
@@ -39,7 +38,5 @@ namespace AreaDoAluno.Data
             modelBuilder.Entity<Student>().ToTable("Students");
             modelBuilder.Entity<Professor>().ToTable("Professors");
         }
-
-
     }
 }

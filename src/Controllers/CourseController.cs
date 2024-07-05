@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("course")]
+    [Route("[controller]")]
     [ApiController]
     public class CourseController : Controller
     {
@@ -17,44 +17,43 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPost]
-        [Route("cadastrar")] 
-        public async Task<ActionResult<Course>> AddCourseAsync(Course course) 
+        [Route("")] 
+        public async Task<ActionResult<Course>> Create(Course course) 
         {
             _context.Add(course);
             await _context.SaveChangesAsync();
             return Created("", course);
         }
 
-
         [HttpPut]
-        [Route("update")]
-        public async Task<ActionResult<Course>> UpdateCourse(Course NewCourse) 
+        [Route("")]
+        public async Task<ActionResult<Course>> Update(Course newCourse) 
         {
             try {
-                var course = await _context.Course.FindAsync(NewCourse.Id);
+                var course = await _context.Course.FindAsync(newCourse.Id);
 
                 if (course == null)
                 {
                     return NotFound("Course not found");
                 }
 
-                foreach (var property in NewCourse.GetType().GetProperties())
+                foreach (var property in newCourse.GetType().GetProperties())
                 {
-                    var NewValue = NewCourse.GetType().GetProperty(property.Name)?.GetValue(NewCourse);
-                    property.SetValue(course, NewValue);
+                    var newValue = newCourse.GetType().GetProperty(property.Name)?.GetValue(newCourse);
+                    property.SetValue(course, newValue);
                 }
 
                 await _context.SaveChangesAsync();
 
-                return Ok(NewCourse);
+                return Ok(newCourse);
             } catch {
                 return StatusCode(400);
             }
         }
 
         [HttpGet]
-        [Route("getAll")]
-        public async Task<IActionResult> GetAll() 
+        [Route("")]
+        public async Task<IActionResult> List() 
         {
             try {
                 var courses = await _context.Course.ToListAsync();
@@ -66,8 +65,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("get_id")]
-        public async Task<IActionResult> GetId(int Id) 
+        [Route("{id}")]
+        public async Task<IActionResult> Find(int Id) 
         {
             try {
                 var course = await _context.Course.FirstOrDefaultAsync((course) => course.Id == Id);
@@ -83,7 +82,7 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpDelete]
-        [Route("delete_id")]
+        [Route("{id}")]
         public async Task<IActionResult> Delete(int Id) 
         {
             try {
@@ -96,7 +95,7 @@ namespace AreaDoAluno.Controllers
 
                 await _context.Course.Where((course) => course.Id == Id).ExecuteDeleteAsync();
 
-                return Ok("Course deleted");
+                return StatusCode(204);
             } catch {
                 return StatusCode(500);
             }

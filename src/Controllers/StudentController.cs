@@ -10,27 +10,10 @@ namespace AreaDoAluno.Controllers
     public class StudentController : Controller
     {
         private readonly DataContext _context;
-        //GeneralController genCtrl = new();
 
         public StudentController(DataContext appDbContext) {
             _context = appDbContext;
         }
-
-        //public async Task<Student> BuildStudent(Student _Student)
-        //{
-        //    _Student.Adress = await genCtrl.GetAdressId(_Student.AdressId);
-            
-        //    return _Student;
-        //}
-
-        //public async Task<Student[]> BuildStudent(Student[] Students)
-        //{
-        //    foreach (var Student in Students){
-        //        Student StudentTemp = await BuildStudent(Student);
-        //        Student.Adress = StudentTemp.Adress;
-        //    }   
-        //    return Students;
-        //}
 
         [HttpPost]
         [Route("")] 
@@ -41,7 +24,7 @@ namespace AreaDoAluno.Controllers
             return Created("", student);
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("")]
         public async Task<ActionResult<Student>> Update(Student newStudent) 
         {
@@ -112,7 +95,7 @@ namespace AreaDoAluno.Controllers
                 _context.Student.Remove(student);
                 await _context.SaveChangesAsync();
 
-                return Ok();
+                return StatusCode(204);
             } catch {
                 return StatusCode(500);
             }

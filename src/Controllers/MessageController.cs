@@ -5,39 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("message")]
+    [Route("[controller]")]
     [ApiController]
     public class MessageController : ControllerBase
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
 
         public MessageController(DataContext appDbContext)
         {
             _context = appDbContext;
         }
 
-         public async Task<Message> BuildMessage(Message _Message)
-        {
-            _Message.Class = await genCtrl.GetClassId(_Message.ClassId);
-    
-            
-            return _Message;
-        }
-
-        public async Task<Message[]> BuildMessage(Message[] _Messages)
-        {
-            foreach (var _Message in _Messages){
-                Message MessageTemp = await BuildMessage(_Message);
-                _Message.Class = MessageTemp.Class;
-            }
-            return _Messages;
-        }
-
-
         [HttpPost]
-        [Route("cadastrar")]
-        public async Task<ActionResult<Message>> AddMessage(Message message)
+        [Route("")]
+        public async Task<ActionResult<Message>> Create(Message message)
         {
             try
             {
@@ -52,8 +33,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        public async Task<ActionResult<IEnumerable<Message>>> GetAllMessages()
+        [Route("")]
+        public async Task<ActionResult<IEnumerable<Message>>> List()
         {
             try
             {
@@ -66,8 +47,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Message>> GetMessageById(int id)
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<Message>> Find(int id)
         {
             try
             {
@@ -86,8 +68,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMessage(int id, Message updatedMessage)
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update(int id, Message updatedMessage)
         {
             try
             {
@@ -114,8 +97,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMessage(int id)
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
@@ -129,7 +113,7 @@ namespace AreaDoAluno.Controllers
                 _context.Message.Remove(message);
                 await _context.SaveChangesAsync();
 
-                return Ok("Message deleted");
+                return StatusCode(204);
             }
             catch (Exception ex)
             {

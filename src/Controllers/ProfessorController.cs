@@ -5,40 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("professor")]
+    [Route("[controller]")]
     [ApiController]
     public class ProfessorController : Controller
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
 
         public ProfessorController(DataContext appDbContext) {
             _context = appDbContext;
         }
 
-
-        public async Task<Professor> BuildProfessor(Professor _Professor)
-        {
-            _Professor.Address = await genCtrl.GetAdressId(_Professor.AddressId);
-            
-            return _Professor;
-        }
-
-        public async Task<Professor[]> BuildProfessor(Professor[] professors)
-        {
-            foreach (var professor in professors){
-                Professor ProfessorTemp = await BuildProfessor(professor);
-                professor.Address = ProfessorTemp.Address;
-            }   
-            return professors;
-        }
-
-
-
-
         [HttpPost]
-        [Route("cadastrar")] 
-        public ActionResult<Professor> AddProfessor(Professor professor) 
+        [Route("")] 
+        public ActionResult<Professor> Create(Professor professor) 
         {
             _context.Add(professor);
             _context.SaveChanges();
@@ -46,8 +25,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPut]
-        [Route("update")]
-        public async Task<ActionResult<Professor>> UpdateProfessor(Professor newProfessor) 
+        [Route("")]
+        public async Task<ActionResult<Professor>> Update(Professor newProfessor) 
         {
             try {
                 var professor = await _context.Professor.FindAsync(newProfessor.Id);
@@ -72,12 +51,11 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        public async Task<IActionResult> GetAll() 
+        [Route("")]
+        public async Task<IActionResult> List() 
         {
             try {
                 var professors = await _context.Professor.ToListAsync();
-                professors = (await BuildProfessor(professors.ToArray())).ToList();
 
                 return Ok(professors);
             } catch {
@@ -85,9 +63,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        [Route("get")]
-        public async Task<ActionResult<Professor>> Get(int id) 
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<Professor>> Find(int id) 
         {
             try {
                 var professor = await _context.Professor.FirstOrDefaultAsync(p => p.Id == id);
@@ -95,7 +73,6 @@ namespace AreaDoAluno.Controllers
                 if (professor == null) {
                     return NotFound("Professor not found");
                 }
-                professor = await BuildProfessor(professor);
                 
                 return Ok(professor);
             } catch {
@@ -103,8 +80,8 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        [Route("delete")]
+        [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> Delete(int id) 
         {
             try {
@@ -118,7 +95,7 @@ namespace AreaDoAluno.Controllers
                 _context.Professor.Remove(professor);
                 await _context.SaveChangesAsync();
 
-                return Ok("Professor deleted");
+                return StatusCode(204);
             } catch {
                 return StatusCode(500);
             }

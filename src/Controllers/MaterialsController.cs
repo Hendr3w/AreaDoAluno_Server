@@ -10,29 +10,11 @@ namespace AreaDoAluno.Controllers
     public class MaterialsController : ControllerBase
     {
         private readonly DataContext _context;
-        //GeneralController genCtrl = new();
 
         public MaterialsController(DataContext appDbContext)
         {
             _context = appDbContext;
         }
-
-        //public async Task<Materials> BuildMaterials(Materials material)
-        //{
-        //    material.Class = await genCtrl.GetClassId(material.ClassId);
-            
-        //    return material;
-        //}
-
-        //public async Task<Materials[]> BuildMaterials(Materials[] materials)
-        //{
-        //    foreach (var material in materials){
-        //        Materials MaterialsTemp = await BuildMaterials(material);
-        //        material.Class = MaterialsTemp.Class;
-                
-        //    }
-        //    return materials;
-        //}
 
         [HttpPost]
         [Route("")]
@@ -67,8 +49,8 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        [Route("")]
+        [HttpGet]
+        [Route("{id}")]
         public async Task<ActionResult<Materials>> Find(int id)
         {
             try
@@ -88,8 +70,8 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpPatch("{id}")]
-        [Route("")]
+        [HttpPut]
+        [Route("{id}")]
         public async Task<IActionResult> Update(int id, Materials updatedMaterial)
         {
             try
@@ -120,8 +102,8 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        [Route("")]
+        [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -136,7 +118,7 @@ namespace AreaDoAluno.Controllers
                 _context.Materials.Remove(material);
                 await _context.SaveChangesAsync();
 
-                return Ok("Material deleted");
+                return StatusCode(204);
             }
             catch (Exception ex)
             {

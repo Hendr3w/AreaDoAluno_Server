@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("discipline")]
+    [Route("[controller]")]
     [ApiController]
     public class DisciplineController : Controller
     {
@@ -16,10 +16,9 @@ namespace AreaDoAluno.Controllers
             _context = context;
         }
 
-
         [HttpGet]
-        [Route("all")]
-        public async Task<IActionResult> GetAll() 
+        [Route("")]
+        public async Task<IActionResult> List() 
         {
             try {
                 var discipline = await _context.Discipline.ToListAsync();
@@ -30,10 +29,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-
         [HttpGet]
-        [Route("get_id")]
-        public async Task<ActionResult<Discipline>> GetId(int id)
+        [Route("{id}")]
+        public async Task<ActionResult<Discipline>> Find(int id)
         {
             try{
                 var discipline = await _context.Discipline.FirstOrDefaultAsync(a => a.Id == id);
@@ -49,8 +47,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPost]
-        [Route("signup")] 
-        public ActionResult<Discipline> AddDiscipline(Discipline discipline) 
+        [Route("")] 
+        public ActionResult<Discipline> Create(Discipline discipline) 
         {
             _context.Add(discipline);
             _context.SaveChanges();
@@ -58,8 +56,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpPut]
-        [Route("update")]
-        public async Task<ActionResult<Discipline>> UpdateDiscipline(Discipline newDiscipline) 
+        [Route("")]
+        public async Task<ActionResult<Discipline>> Update(Discipline newDiscipline) 
         {
             try {
                 var discipline = await _context.Discipline.FindAsync(newDiscipline.Id);
@@ -83,8 +81,8 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        [Route("delete")]
+        [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> Delete(int id) 
         {
             try {
@@ -98,7 +96,7 @@ namespace AreaDoAluno.Controllers
                 _context.Discipline.Remove(Discipline);
                 await _context.SaveChangesAsync();
 
-                return Ok("Discipline deleted");
+                return StatusCode(204);
             } catch {
                 return StatusCode(500);
             }
