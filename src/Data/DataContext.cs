@@ -5,13 +5,19 @@ namespace AreaDoAluno.Data
 {
     public class DataContext : DbContext 
     {
-        //public DataContext(DbContextOptions options) : base (options) {}
-        public DbSet<Adress> Adress { get; set; }
+        public IConfiguration Configuration { get; }
+
+        public DataContext(IConfiguration _configuration)
+        {
+            Configuration = _configuration;
+        }
+
+        public DbSet<Address> Address { get; set; }
         public DbSet<Class> Class { get; set; }
         public DbSet<Course> Course { get; set; }
         public DbSet<Discipline> Discipline { get; set; }
         public DbSet<Enrollment> Enrollment { get; set; }
-        public DbSet<Exam> Exam{ get; set; }
+        public DbSet<Exam> Exam { get; set; }
         public DbSet<Materials> Materials { get; set; }
         public DbSet<Message> Message { get; set; }
         public DbSet<Student> Student { get; set; }
@@ -23,7 +29,7 @@ namespace AreaDoAluno.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connectionString = "Server=localhost;Port=3306;Database=AreaDoAluno;User=root;Password=hendrew;";
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
 

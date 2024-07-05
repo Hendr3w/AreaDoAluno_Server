@@ -5,49 +5,45 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("Student")]
+    [Route("[controller]")]
     [ApiController]
     public class StudentController : Controller
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
+        //GeneralController genCtrl = new();
 
         public StudentController(DataContext appDbContext) {
             _context = appDbContext;
         }
 
-
-        public async Task<Student> BuildStudent(Student _Student)
-        {
-            _Student.Adress = await genCtrl.GetAdressId(_Student.AdressId);
+        //public async Task<Student> BuildStudent(Student _Student)
+        //{
+        //    _Student.Adress = await genCtrl.GetAdressId(_Student.AdressId);
             
-            return _Student;
-        }
+        //    return _Student;
+        //}
 
-        public async Task<Student[]> BuildStudent(Student[] Students)
-        {
-            foreach (var Student in Students){
-                Student StudentTemp = await BuildStudent(Student);
-                Student.Adress = StudentTemp.Adress;
-            }   
-            return Students;
-        }
-
-
-
+        //public async Task<Student[]> BuildStudent(Student[] Students)
+        //{
+        //    foreach (var Student in Students){
+        //        Student StudentTemp = await BuildStudent(Student);
+        //        Student.Adress = StudentTemp.Adress;
+        //    }   
+        //    return Students;
+        //}
 
         [HttpPost]
-        [Route("cadastrar")] 
-        public ActionResult<Student> AddStudent(Student Student) 
+        [Route("")] 
+        public async Task<ActionResult<Student>> Create(Student student) 
         {
-            _context.Add(Student);
-            _context.SaveChanges();
-            return Created("", Student);
+            _context.Add(student);
+            await _context.SaveChangesAsync();
+            return Created("", student);
         }
 
-        [HttpPut]
-        [Route("update")]
-        public async Task<ActionResult<Student>> UpdateStudent(Student newStudent) 
+        [HttpPatch]
+        [Route("")]
+        public async Task<ActionResult<Student>> Update(Student newStudent) 
         {
             try {
                 var Student = await _context.Student.FindAsync(newStudent.Id);
@@ -72,53 +68,51 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        public async Task<IActionResult> GetAll() 
+        [Route("")]
+        public async Task<IActionResult> List() 
         {
             try {
-                var Students = await _context.Student.ToListAsync();
-                Students = (await BuildStudent(Students.ToArray())).ToList();
+                var students = await _context.Student.ToListAsync();
 
-                return Ok(Students);
+                return Ok(students);
             } catch {
-                return StatusCode(400);
+                return StatusCode(500);
             }
         }
 
-        [HttpGet("{id}")]
-        [Route("get")]
-        public async Task<ActionResult<Student>> Get(int id) 
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<Student>> Find(int id) 
         {
             try {
-                var Student = await _context.Student.FirstOrDefaultAsync(p => p.Id == id);
+                var student = await _context.Student.FirstOrDefaultAsync(p => p.Id == id);
 
-                if (Student == null) {
+                if (student == null) {
                     return NotFound("Student not found");
                 }
-                Student = await BuildStudent(Student);
                 
-                return Ok(Student);
+                return Ok(student);
             } catch {
                 return StatusCode(500);
             }
         }
 
         [HttpDelete("{id}")]
-        [Route("delete")]
+        [Route("")]
         public async Task<IActionResult> Delete(int id) 
         {
             try {
-                var Student = await _context.Student.FindAsync(id);
+                var student = await _context.Student.FindAsync(id);
                 
-                if (Student == null)
+                if (student == null)
                 {
                     return NotFound("Student not found");
                 }
 
-                _context.Student.Remove(Student);
+                _context.Student.Remove(student);
                 await _context.SaveChangesAsync();
 
-                return Ok("Student deleted");
+                return Ok();
             } catch {
                 return StatusCode(500);
             }

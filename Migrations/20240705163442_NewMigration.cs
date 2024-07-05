@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AreaDoAluno_Server.Migrations
 {
     /// <inheritdoc />
-    public partial class v1 : Migration
+    public partial class NewMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,7 @@ namespace AreaDoAluno_Server.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Adress",
+                name: "Address",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -36,7 +36,7 @@ namespace AreaDoAluno_Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Adress", x => x.Id);
+                    table.PrimaryKey("PK_Address", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -93,18 +93,18 @@ namespace AreaDoAluno_Server.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Rgm = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Sex = table.Column<string>(type: "varchar(1)", nullable: false)
+                    Gender = table.Column<string>(type: "varchar(1)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    AdressId = table.Column<int>(type: "int", nullable: false),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
                     Birthdate = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Professors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Professors_Adress_AdressId",
-                        column: x => x.AdressId,
-                        principalTable: "Adress",
+                        name: "FK_Professors_Address_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -130,18 +130,18 @@ namespace AreaDoAluno_Server.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Rgm = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Sex = table.Column<string>(type: "varchar(1)", nullable: false)
+                    Gender = table.Column<string>(type: "varchar(1)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    AdressId = table.Column<int>(type: "int", nullable: false),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
                     Birthdate = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_Adress_AdressId",
-                        column: x => x.AdressId,
-                        principalTable: "Adress",
+                        name: "FK_Students_Address_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -307,7 +307,7 @@ namespace AreaDoAluno_Server.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Tuitions",
+                name: "Tuition",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -321,9 +321,9 @@ namespace AreaDoAluno_Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tuitions", x => x.Id);
+                    table.PrimaryKey("PK_Tuition", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tuitions_Enrollment_EnrollmentId",
+                        name: "FK_Tuition_Enrollment_EnrollmentId",
                         column: x => x.EnrollmentId,
                         principalTable: "Enrollment",
                         principalColumn: "Id",
@@ -395,9 +395,9 @@ namespace AreaDoAluno_Server.Migrations
                 column: "ClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Professors_AdressId",
+                name: "IX_Professors_AddressId",
                 table: "Professors",
-                column: "AdressId");
+                column: "AddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentClass_ClassId",
@@ -420,13 +420,13 @@ namespace AreaDoAluno_Server.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_AdressId",
+                name: "IX_Students_AddressId",
                 table: "Students",
-                column: "AdressId");
+                column: "AddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tuitions_EnrollmentId",
-                table: "Tuitions",
+                name: "IX_Tuition_EnrollmentId",
+                table: "Tuition",
                 column: "EnrollmentId");
         }
 
@@ -446,7 +446,7 @@ namespace AreaDoAluno_Server.Migrations
                 name: "StudentExam");
 
             migrationBuilder.DropTable(
-                name: "Tuitions");
+                name: "Tuition");
 
             migrationBuilder.DropTable(
                 name: "Exam");
@@ -470,7 +470,7 @@ namespace AreaDoAluno_Server.Migrations
                 name: "Professors");
 
             migrationBuilder.DropTable(
-                name: "Adress");
+                name: "Address");
         }
     }
 }

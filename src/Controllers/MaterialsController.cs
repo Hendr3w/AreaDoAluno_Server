@@ -5,38 +5,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaDoAluno.Controllers
 {
-    [Route("materials")]
+    [Route("[controller]")]
     [ApiController]
     public class MaterialsController : ControllerBase
     {
         private readonly DataContext _context;
-        GeneralController genCtrl = new();
+        //GeneralController genCtrl = new();
 
         public MaterialsController(DataContext appDbContext)
         {
             _context = appDbContext;
         }
 
-        public async Task<Materials> BuildMaterials(Materials material)
-        {
-            material.Class = await genCtrl.GetClassId(material.ClassId);
+        //public async Task<Materials> BuildMaterials(Materials material)
+        //{
+        //    material.Class = await genCtrl.GetClassId(material.ClassId);
             
-            return material;
-        }
+        //    return material;
+        //}
 
-        public async Task<Materials[]> BuildMaterials(Materials[] materials)
-        {
-            foreach (var material in materials){
-                Materials MaterialsTemp = await BuildMaterials(material);
-                material.Class = MaterialsTemp.Class;
+        //public async Task<Materials[]> BuildMaterials(Materials[] materials)
+        //{
+        //    foreach (var material in materials){
+        //        Materials MaterialsTemp = await BuildMaterials(material);
+        //        material.Class = MaterialsTemp.Class;
                 
-            }
-            return materials;
-        }
+        //    }
+        //    return materials;
+        //}
 
         [HttpPost]
-        [Route("cadastrar")]
-        public async Task<ActionResult<Materials>> AddMaterial(Materials material)
+        [Route("")]
+        public async Task<ActionResult<Materials>> Create(Materials material)
         {
             try
             {
@@ -51,13 +51,13 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        public async Task<ActionResult<IEnumerable<Materials>>> GetAllMaterials()
+        [Route("")]
+        public async Task<ActionResult<IEnumerable<Materials>>> List()
         {
             try
             {
                 var materials = await _context.Materials.ToListAsync();
-                materials = (await BuildMaterials(materials.ToArray())).ToList();
+                // materials = (await BuildMaterials(materials.ToArray())).ToList();
 
                 return Ok(materials);
             }
@@ -68,8 +68,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpGet("{id}")]
-        [Route("get")]
-        public async Task<ActionResult<Materials>> GetMaterialById(int id)
+        [Route("")]
+        public async Task<ActionResult<Materials>> Find(int id)
         {
             try
             {
@@ -80,8 +80,6 @@ namespace AreaDoAluno.Controllers
                     return NotFound("Material not found");
                 }
 
-                material = await BuildMaterials(material);
-
                 return Ok(material);
             }
             catch (Exception ex)
@@ -90,9 +88,9 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        [Route("update")]
-        public async Task<IActionResult> UpdateMaterial(int id, Materials updatedMaterial)
+        [HttpPatch("{id}")]
+        [Route("")]
+        public async Task<IActionResult> Update(int id, Materials updatedMaterial)
         {
             try
             {
@@ -123,8 +121,8 @@ namespace AreaDoAluno.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Route("delete")]
-        public async Task<IActionResult> DeleteMaterial(int id)
+        [Route("")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
