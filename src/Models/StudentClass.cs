@@ -7,8 +7,8 @@ namespace AreaDoAluno.Models
         public int ClassId { get; set; }
         public Student? Student { get; set; }
         public int StudentId { get; set; }
-        public float Grade { get; set; }
-        public float AttendanceRate { get; set; }
+        public decimal Grade { get; set; }
+        public decimal AttendanceRate { get; set; }
 
         public StudentClass() {}
     }

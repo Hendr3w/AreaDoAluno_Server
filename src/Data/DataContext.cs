@@ -20,7 +20,7 @@ namespace AreaDoAluno.Data
         public DbSet<Exam> Exam { get; set; }
         public DbSet<Materials> Materials { get; set; }
         public DbSet<Message> Message { get; set; }
-        public DbSet<Person> Person { get; set; }
+        public DbSet<User> User { get; set; }
         public DbSet<Student> Student { get; set; }
         public DbSet<Professor> Professor { get; set; }
         public DbSet<StudentExam> StudentExam { get; set; }
@@ -35,8 +35,13 @@ namespace AreaDoAluno.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Student>().ToTable("Students");
-            modelBuilder.Entity<Professor>().ToTable("Professors");
+            modelBuilder.Entity<User>()
+                .HasOne(p => p.Address)
+                .WithOne()
+                .HasForeignKey<User>(p =>p.AddressId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

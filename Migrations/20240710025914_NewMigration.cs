@@ -48,7 +48,9 @@ namespace AreaDoAluno_Server.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Price = table.Column<float>(type: "float", nullable: false)
+                    Field = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Active = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,7 +65,8 @@ namespace AreaDoAluno_Server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    price = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,7 +75,7 @@ namespace AreaDoAluno_Server.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Person",
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -94,53 +97,19 @@ namespace AreaDoAluno_Server.Migrations
                     Gender = table.Column<string>(type: "varchar(1)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AddressId = table.Column<int>(type: "int", nullable: false),
-                    Birthdate = table.Column<DateOnly>(type: "date", nullable: false)
+                    Birthdate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Discriminator = table.Column<string>(type: "varchar(13)", maxLength: 13, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    HourlyRate = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    HoursWorked = table.Column<decimal>(type: "decimal(65,30)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Person", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Person_Address_AddressId",
+                        name: "FK_User_Address_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Professors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    HourlyRate = table.Column<float>(type: "float", nullable: false),
-                    HoursWorked = table.Column<float>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Professors", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Professors_Person_Id",
-                        column: x => x.Id,
-                        principalTable: "Person",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Students", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Students_Person_Id",
-                        column: x => x.Id,
-                        principalTable: "Person",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -167,9 +136,9 @@ namespace AreaDoAluno_Server.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Class_Professors_ProfessorId",
+                        name: "FK_Class_User_ProfessorId",
                         column: x => x.ProfessorId,
-                        principalTable: "Professors",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -186,7 +155,7 @@ namespace AreaDoAluno_Server.Migrations
                     EnrollmentStatus = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EnrollmentDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    DiscountRate = table.Column<float>(type: "float", nullable: false),
+                    DiscountRate = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     Period = table.Column<int>(type: "int", nullable: false),
                     ComplementaryHours = table.Column<int>(type: "int", nullable: false)
                 },
@@ -200,9 +169,9 @@ namespace AreaDoAluno_Server.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Enrollment_Students_StudentId",
+                        name: "FK_Enrollment_User_StudentId",
                         column: x => x.StudentId,
-                        principalTable: "Students",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -284,8 +253,8 @@ namespace AreaDoAluno_Server.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ClassId = table.Column<int>(type: "int", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
-                    Grade = table.Column<float>(type: "float", nullable: false),
-                    AttendanceRate = table.Column<float>(type: "float", nullable: false)
+                    Grade = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    AttendanceRate = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -297,9 +266,9 @@ namespace AreaDoAluno_Server.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentClass_Students_StudentId",
+                        name: "FK_StudentClass_User_StudentId",
                         column: x => x.StudentId,
-                        principalTable: "Students",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -316,7 +285,7 @@ namespace AreaDoAluno_Server.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     MonthRef = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Amount = table.Column<float>(type: "float", nullable: false)
+                    Amount = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -338,7 +307,7 @@ namespace AreaDoAluno_Server.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     ExamId = table.Column<int>(type: "int", nullable: false),
-                    Grade = table.Column<float>(type: "float", nullable: false)
+                    Grade = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -350,9 +319,9 @@ namespace AreaDoAluno_Server.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentExam_Students_StudentId",
+                        name: "FK_StudentExam_User_StudentId",
                         column: x => x.StudentId,
-                        principalTable: "Students",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -394,11 +363,6 @@ namespace AreaDoAluno_Server.Migrations
                 column: "ClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Person_AddressId",
-                table: "Person",
-                column: "AddressId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_StudentClass_ClassId",
                 table: "StudentClass",
                 column: "ClassId");
@@ -422,6 +386,12 @@ namespace AreaDoAluno_Server.Migrations
                 name: "IX_Tuition_EnrollmentId",
                 table: "Tuition",
                 column: "EnrollmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_AddressId",
+                table: "User",
+                column: "AddressId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -455,16 +425,10 @@ namespace AreaDoAluno_Server.Migrations
                 name: "Course");
 
             migrationBuilder.DropTable(
-                name: "Students");
-
-            migrationBuilder.DropTable(
                 name: "Discipline");
 
             migrationBuilder.DropTable(
-                name: "Professors");
-
-            migrationBuilder.DropTable(
-                name: "Person");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Address");

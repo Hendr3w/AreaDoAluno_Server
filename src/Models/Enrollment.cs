@@ -9,7 +9,7 @@ namespace AreaDoAluno.Models
         public int CourseId { get; set; }
         public string? EnrollmentStatus { get; set; }
         public DateOnly EnrollmentDate { get; set; }
-        public float DiscountRate { get; set; }
+        public decimal DiscountRate { get; set; }
         public int Period { get; set; }
         public int ComplementaryHours { get; set; }
 

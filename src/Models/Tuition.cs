@@ -7,7 +7,7 @@ namespace AreaDoAluno.Models
         public int EnrollmentId { get; set; }
         public string? SelfStatus { get; set; }
         public string? MonthRef { get; set; }
-        public float Amount { get; set; }
+        public decimal Amount { get; set; }
 
         public Tuition() {}
     }
