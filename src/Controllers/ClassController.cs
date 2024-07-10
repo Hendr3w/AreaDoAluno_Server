@@ -54,7 +54,7 @@ namespace AreaDoAluno.Controllers
             return Created("", _class);
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("")]
         public async Task<ActionResult<Class>> Update(Class newClass) 
         {

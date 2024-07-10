@@ -55,7 +55,7 @@ namespace AreaDoAluno.Controllers
             return Created("", discipline);
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("")]
         public async Task<ActionResult<Discipline>> Update(Discipline newDiscipline) 
         {

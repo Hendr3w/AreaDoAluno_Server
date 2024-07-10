@@ -69,7 +69,7 @@ namespace AreaDoAluno.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("{id}")]
         public async Task<IActionResult> Update(int id, Enrollment updatedEnrollment)
         {
