@@ -1,8 +1,8 @@
 namespace AreaDoAluno.Models
 {
-    public class Person 
+    public class User 
     {
-        public Person () {
+        public User () {
 
         }
         public int Id { get; set; }

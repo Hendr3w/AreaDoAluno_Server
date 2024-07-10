@@ -1,9 +1,9 @@
 namespace AreaDoAluno.Models
 {
-    public class Professor : Person
+    public class Professor : User
     {
-        public float HourlyRate { get; set; }
-        public float HoursWorked { get; set; }
+        public decimal HourlyRate { get; set; }
+        public decimal HoursWorked { get; set; }
 
         public Professor() {}
     }

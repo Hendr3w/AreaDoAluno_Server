@@ -87,11 +87,15 @@ namespace AreaDoAluno_Server.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<bool>("Active")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Field")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("float");
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -108,6 +112,9 @@ namespace AreaDoAluno_Server.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
+
+                    b.Property<decimal>("price")
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
 
@@ -128,8 +135,8 @@ namespace AreaDoAluno_Server.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<float>("DiscountRate")
-                        .HasColumnType("float");
+                    b.Property<decimal>("DiscountRate")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<DateOnly>("EnrollmentDate")
                         .HasColumnType("date");
@@ -221,7 +228,89 @@ namespace AreaDoAluno_Server.Migrations
                     b.ToTable("Message");
                 });
 
-            modelBuilder.Entity("AreaDoAluno.Models.Person", b =>
+            modelBuilder.Entity("AreaDoAluno.Models.StudentClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AttendanceRate")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Grade")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentClass");
+                });
+
+            modelBuilder.Entity("AreaDoAluno.Models.StudentExam", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ExamId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Grade")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExamId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentExam");
+                });
+
+            modelBuilder.Entity("AreaDoAluno.Models.Tuition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("EnrollmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MonthRef")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SelfStatus")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnrollmentId");
+
+                    b.ToTable("Tuition");
+                });
+
+            modelBuilder.Entity("AreaDoAluno.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,6 +326,11 @@ namespace AreaDoAluno_Server.Migrations
 
                     b.Property<string>("Cpf")
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("varchar(13)");
 
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
@@ -262,113 +356,34 @@ namespace AreaDoAluno_Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("AddressId")
+                        .IsUnique();
 
-                    b.ToTable("Person");
+                    b.ToTable("User");
 
-                    b.UseTptMappingStrategy();
-                });
+                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
 
-            modelBuilder.Entity("AreaDoAluno.Models.StudentClass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<float>("AttendanceRate")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Grade")
-                        .HasColumnType("float");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentClass");
-                });
-
-            modelBuilder.Entity("AreaDoAluno.Models.StudentExam", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ExamId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Grade")
-                        .HasColumnType("float");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExamId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentExam");
-                });
-
-            modelBuilder.Entity("AreaDoAluno.Models.Tuition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<float>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<int>("EnrollmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MonthRef")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SelfStatus")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnrollmentId");
-
-                    b.ToTable("Tuition");
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("AreaDoAluno.Models.Professor", b =>
                 {
-                    b.HasBaseType("AreaDoAluno.Models.Person");
+                    b.HasBaseType("AreaDoAluno.Models.User");
 
-                    b.Property<float>("HourlyRate")
-                        .HasColumnType("float");
+                    b.Property<decimal>("HourlyRate")
+                        .HasColumnType("decimal(65,30)");
 
-                    b.Property<float>("HoursWorked")
-                        .HasColumnType("float");
+                    b.Property<decimal>("HoursWorked")
+                        .HasColumnType("decimal(65,30)");
 
-                    b.ToTable("Professors", (string)null);
+                    b.HasDiscriminator().HasValue("Professor");
                 });
 
             modelBuilder.Entity("AreaDoAluno.Models.Student", b =>
                 {
-                    b.HasBaseType("AreaDoAluno.Models.Person");
+                    b.HasBaseType("AreaDoAluno.Models.User");
 
-                    b.ToTable("Students", (string)null);
+                    b.HasDiscriminator().HasValue("Student");
                 });
 
             modelBuilder.Entity("AreaDoAluno.Models.Class", b =>
@@ -442,17 +457,6 @@ namespace AreaDoAluno_Server.Migrations
                     b.Navigation("Class");
                 });
 
-            modelBuilder.Entity("AreaDoAluno.Models.Person", b =>
-                {
-                    b.HasOne("AreaDoAluno.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-                });
-
             modelBuilder.Entity("AreaDoAluno.Models.StudentClass", b =>
                 {
                     b.HasOne("AreaDoAluno.Models.Class", "Class")
@@ -502,22 +506,15 @@ namespace AreaDoAluno_Server.Migrations
                     b.Navigation("Enrollment");
                 });
 
-            modelBuilder.Entity("AreaDoAluno.Models.Professor", b =>
+            modelBuilder.Entity("AreaDoAluno.Models.User", b =>
                 {
-                    b.HasOne("AreaDoAluno.Models.Person", null)
+                    b.HasOne("AreaDoAluno.Models.Address", "Address")
                         .WithOne()
-                        .HasForeignKey("AreaDoAluno.Models.Professor", "Id")
+                        .HasForeignKey("AreaDoAluno.Models.User", "AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("AreaDoAluno.Models.Student", b =>
-                {
-                    b.HasOne("AreaDoAluno.Models.Person", null)
-                        .WithOne()
-                        .HasForeignKey("AreaDoAluno.Models.Student", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Address");
                 });
 #pragma warning restore 612, 618
         }

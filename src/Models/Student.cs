@@ -1,6 +1,6 @@
 namespace AreaDoAluno.Models
 {
-    public class Student : Person
+    public class Student : User
     {
         public Student() {}
     }

@@ -7,7 +7,7 @@ namespace AreaDoAluno.Models
         public int StudentId { get; set; }
         public Exam? Exam { get; set; }
         public int ExamId { get; set; }
-        public float Grade { get; set; }
+        public decimal Grade { get; set; }
 
         public StudentExam() {}
     }
