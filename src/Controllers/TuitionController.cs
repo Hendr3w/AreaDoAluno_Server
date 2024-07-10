@@ -24,7 +24,7 @@ namespace AreaDoAluno.Controllers
             return Created("", tuition);
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("")]
         public async Task<ActionResult<Tuition>> Update(Tuition newTuition) 
         {
